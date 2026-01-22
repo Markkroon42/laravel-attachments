@@ -222,10 +222,11 @@ class Attachment extends Model implements AttachmentContract
         }
 
         if (config('attachments.behaviors.cascade_delete')) {
-            static::forceDeleting(function ($attachment) {
+            static::deleting(function ($attachment) {
                 /** @var Attachment $attachment */
-
-                $attachment->deleteFile();
+                if ($attachment->isForceDeleting()) {
+                    $attachment->deleteFile();
+                }
             });
         }
 
